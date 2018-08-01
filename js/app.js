@@ -1,24 +1,18 @@
-var messageSocket = new WebSocket("ws://192.168.1.65:8080");
-var doc = document.getElementById('doc');
+// window.alert('testing that js works');
+ws = new WebSocket("ws://192.168.1.65:8080");
+doc = document.getElementById('doc');
 
-// doc.contentEditable = true;
-// doc.focus();
+function debug(str){ $("#debug").append("<p>"+str+"</p>"); };
 
-// function sendText() {
-//     var msg = {
-//         html : doc.innerHTML,
-//     }
-//     console.log("sending message: ", msg)
-//     messageSocket.send(JSON.stringify(msg));
-// }
-//
-// TODO edit handler
-// doc.addEventListener("input", sendText);
-
-messageSocket.onmessage = function (event) {
+ws.onmessage = function (event) {
     if (event.data) {
         data = JSON.parse(event.data)
-        console.log(data.html);
         doc.innerHTML = data.html
     }
 }
+ws.onclose = function() { debug("socket closed"); };
+ws.onerror =  function(event) { debug("socket error observed"); };
+ws.onopen = function() {
+    debug("connected...");
+    ws.send("hello server");
+};

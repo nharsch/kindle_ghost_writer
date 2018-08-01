@@ -3,6 +3,7 @@
 import asyncio
 import json
 from os import path
+from itertools import cycle
 
 # TODO: req.txt
 import websockets
@@ -23,13 +24,19 @@ def content_to_html(content):
 @asyncio.coroutine
 def view_log(websocket, url_path):
     print('new connection', websocket)
-    while True:
-        with open(path.abspath(file_path)) as f:
-            content = f.read()
-            if content:
-                yield from websocket.send(content_to_html(content))
-            else:
-                yield from asyncio.sleep(1)
+    for n in cycle(range(0,1)):
+        if n == 1:
+            yield from asyncio.sleep(3)
+        else:
+            with open(path.abspath(file_path)) as f:
+                content = f.read()
+                if content:
+                    message = json.dumps({
+                        "html": conv.convert(content),
+                    })
+                    yield from websocket.send(message)
+                else:
+                    yield from asyncio.sleep(1)
 
 start_server = websockets.serve(view_log, '192.168.1.65', 8080)
 

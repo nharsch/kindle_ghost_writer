@@ -1,0 +1,36 @@
+<head>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+
+  <!-- CodeMirror -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.css"/>
+
+  <!-- Firepad -->
+  <link rel="stylesheet" href="https://cdn.firebase.com/libs/firepad/1.5.0/firepad.css" />
+  <script src="https://cdn.firebase.com/libs/firepad/1.5.0/firepad.min.js"></script>
+</head>
+
+<body onload="init()">
+    <h1>Testing</h1>
+  <div id="firepad"></div>
+  <script>
+    function init() {
+      // Initialize the Firebase SDK.
+      firebase.initializeApp({
+        apiKey: '<API_KEY>',
+        databaseURL: 'https://<DATABASE_NAME>.firebaseio.com'
+      });
+
+      // Get Firebase Database reference.
+      var firepadRef = firebase.database().ref();
+
+      // Create CodeMirror (with lineWrapping on).
+      var codeMirror = CodeMirror(document.getElementById('firepad'), { lineWrapping: true });
+
+      // Create Firepad (with rich text toolbar and shortcuts enabled).
+      var firepad = Firepad.fromCodeMirror(firepadRef, codeMirror,
+          { richTextShortcuts: true, richTextToolbar: true, defaultText: 'Hello, World!' });
+    }
+  </script>
+</body>

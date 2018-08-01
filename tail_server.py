@@ -24,9 +24,11 @@ def content_to_html(content):
 @asyncio.coroutine
 def view_log(websocket, url_path):
     print('new connection', websocket)
-    for n in cycle(range(0,1)):
-        if n == 1:
-            yield from asyncio.sleep(3)
+    loop = asyncio.get_running_loop()
+    end_time = loop.time() + 5.0
+    while True:
+        if (loop.time() + 1.0) >= end_time:
+            break
         else:
             with open(path.abspath(file_path)) as f:
                 content = f.read()

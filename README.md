@@ -4,7 +4,10 @@
 
 Start server:
 
-`python twisted_server.py`
+```
+pip isntall requirements.txt
+python twisted_server.py
+```
 
 To type, go to `localhost:8888/typer`
 
@@ -34,3 +37,4 @@ to shell out the money for one of [these](https://getfreewrite.com/)
 
 - Unique channels/urls
 - Ability to save/edit docs
+- Find python3 websocket library that supports draft-75 protocol

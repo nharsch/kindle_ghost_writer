@@ -10,7 +10,6 @@ catch(err) {
     debug("error" + err.message)
 }
 
-
 // screen
 screen = document.getElementById('screen');
 ws.onmessage = function (event) {
@@ -26,10 +25,6 @@ ws.onopen = function() {
     ws.send("hello server");
 };
 
-ws.onclose = function(event) {
-    console.log(event);
-};
+ws.onclose = function(event) { console.log(event); };
 
-ws.onerror =  function(event) {
-    console.log(event)
-};
+ws.onerror =  function(event) { console.log(event) };

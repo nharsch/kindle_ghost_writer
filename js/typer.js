@@ -25,17 +25,8 @@ keyboard.addEventListener("input", sendText);
 
 
 // other handlers
-ws.onopen = function() {
-    // debug("connected...");
-    ws.send("hello server");
-};
+ws.onopen = function() { ws.send("hello server"); };
 
-ws.onclose = function(event) {
-    // console.log(event);
-    // debug("socket closed " + JSON.stringify(event.code));
-};
+ws.onclose = function(event) { console.log(event); };
 
-ws.onerror =  function(event) {
-    console.log(event)
-    // debug("socket error observed");
-};
+ws.onerror =  function(event) { console.log(event) };

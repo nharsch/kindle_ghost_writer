@@ -1,8 +1,10 @@
+websocket_address = "ws://" + server_address + ":" + port + "/typer_socket"
+
 // debugger
 function debug(str){ $("#debug").append("<p>"+str+"</p>"); };
 
 try {
-    ws = new WebSocket("ws://192.168.1.65:8888/typer_socket");
+    ws = new WebSocket(websocket_address);
 }
 catch(err) {
     debug("error" + err.message)

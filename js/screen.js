@@ -1,3 +1,5 @@
+websocket_address = "ws://" + server_address + ":" + port + "/typer_socket"
+
 // debugger
 function debug(str){ $("#debug").append("<p>"+str+"</p>"); };
 

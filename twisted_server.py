@@ -12,9 +12,14 @@ from twisted.internet import reactor
 
 
 # serve template
-class MainHandler(cyclone.web.RequestHandler):
+class TyperHandler(cyclone.web.RequestHandler):
     def get(self):
-        self.render("index.html")
+        self.render("type_index.html")
+
+
+class ScreenHandler(cyclone.web.RequestHandler):
+    def get(self):
+        self.render("screen_index.html")
 
 
 class Application(cyclone.web.Application):
@@ -30,8 +35,10 @@ class Application(cyclone.web.Application):
         print(settings["js_path"])
 
         handlers = [
-            (r"/", MainHandler),
-            (r"/echo", EchoSocketHandler),
+            (r"/screen", ScreenHandler),
+            (r"/typer", TyperHandler),
+            (r"/typer_socket", TyperSocketHandler),
+            (r"/screen_socket", ScreenSocketHandler),
             (r"/(.*\.js)", cyclone.web.StaticFileHandler,
                 dict(path=settings['js_path'])),
             (r"/(.*\.css)", cyclone.web.StaticFileHandler,
@@ -41,36 +48,42 @@ class Application(cyclone.web.Application):
 
 
 global clients
-clients = set()
+screen_clients = set()
 
-class EchoSocketHandler(cyclone.websocket.WebSocketHandler):
-
+class BaseSocketHandler(cyclone.websocket.WebSocketHandler):
 
     def connectionMade(self, *args, **kwargs):
         log.msg("ws opened", args or "no args", kwargs or "no kwargs")
-        global clients
-        clients.add(self)
 
     def connectionLost(self, reason):
         log.msg("ws closed")
 
+
+class TyperSocketHandler(BaseSocketHandler):
+
     def messageReceived(self, message):
         log.msg("got message %s" % message)
-        self.sendMessage(message)
         if message[0] == "{":
             html = json.loads(message).get('html')
-            if html:
-                self.update_all(html)
-
-    def close(self):
-        global clients
-        clients -= self
+            self.update_all(html)
 
     def update_all(self, html):
         # remove closed clients
-        global clients
-        for client in clients:
+        global screen_clients
+        for client in screen_clients:
             client.sendMessage(json.dumps({'html':html}))
+
+
+class ScreenSocketHandler(BaseSocketHandler):
+
+    def connectionMade(self, *args, **kwargs):
+        log.msg("ws opened", args or "no args", kwargs or "no kwargs")
+        global screen_clients
+        screen_clients.add(self)
+
+    def close(self):
+        global screen_clients
+        screen_clients -= self
 
 
 def main():
